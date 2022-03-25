@@ -1,21 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import { Provider } from './src/context/BlogContext';
+import CreateScreen from './src/screens/CreateScreen';
+import EditScreen from './src/screens/EditScreen';
+import IndexScreen from './src/screens/IndexScreen';
+import ShowScreen from './src/screens/ShowScreen';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+/**
+ * Create a navigator and tell it which screen lists are present and which screen to initialize (opening app) and add a title to the app
+ */
+const navigator = createStackNavigator(
+  {
+    Index: IndexScreen,
+    Show: ShowScreen,
+    Create: CreateScreen,
+    Edit: EditScreen
   },
-});
+  {
+    initialRouteName: 'Index',
+    defaultNavigationOptions: {
+      title: 'Blogs',
+    },
+  }
+);
+
+const App = createAppContainer(navigator); //this creates the app in a component, but we do not want to export this because we want to wrap it with a Provider
+//Provider is used to save global variables that will be available all around their child components
+export default () => {
+  return (
+    <Provider>
+      <App />
+    </Provider>
+  );
+};
